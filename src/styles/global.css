@@ -1,0 +1,492 @@
+/* ========================================
+   Design Tokens
+   ======================================== */
+:root {
+  /* Background & text */
+  --bg: #faf8ef;
+  --text: #776e65;
+  --text-light: #f9f6f2;
+  --text-dark: #8f7a66;
+
+  /* Board */
+  --board-bg: #bbada0;
+  --board-gap: 15px;
+  --board-radius: 6px;
+  --cell-bg: rgba(238, 228, 218, 0.35);
+
+  /* Tiles */
+  --tile-2: #eee4da;
+  --tile-4: #ede0c8;
+  --tile-8: #f2b179;
+  --tile-16: #f59563;
+  --tile-32: #f67c5f;
+  --tile-64: #f65e3b;
+  --tile-128: #edcf72;
+  --tile-256: #edcc61;
+  --tile-512: #edc850;
+  --tile-1024: #edc53f;
+  --tile-2048: #edc22e;
+  --tile-super: #3c3a32;
+  --tile-radius: 3px;
+
+  /* Score board */
+  --score-bg: #bbada0;
+  --score-text: #fff;
+
+  /* Buttons */
+  --btn-bg: #8f7a66;
+  --btn-hover: #9f8b77;
+  --btn-text: #f9f6f2;
+
+  /* Overlay */
+  --overlay-bg: rgba(238, 228, 218, 0.73);
+
+  /* Typography */
+  --font-base: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+  --tile-font-lg: 55px;
+  --tile-font-md: 45px;
+  --tile-font-sm: 35px;
+  --tile-font-xs: 25px;
+
+  font-family: var(--font-base);
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--text);
+  background-color: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================
+   Reset & Layout
+   ======================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  overscroll-behavior: none;
+}
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px 16px;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  max-width: 500px;
+}
+
+/* ========================================
+   App Shell
+   ======================================== */
+.app {
+  text-align: center;
+  user-select: none;
+}
+
+.app-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.app-header h1 {
+  font-size: 64px;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1;
+}
+
+.app-subtitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.app-footer {
+  margin-top: 24px;
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.6;
+  text-align: left;
+}
+
+/* ========================================
+   Score Board
+   ======================================== */
+.score-board {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.score-boxes {
+  display: flex;
+  gap: 8px;
+}
+
+.score-box {
+  background: var(--score-bg);
+  border-radius: var(--board-radius);
+  padding: 8px 16px;
+  min-width: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cell-bg);
+  text-transform: uppercase;
+}
+
+.score-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--score-text);
+  display: inline-block;
+}
+
+.score-value.is-bump {
+  animation: score-bump 0.2s ease-in-out;
+}
+
+@keyframes score-bump {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.restart-btn {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border: none;
+  border-radius: var(--board-radius);
+  padding: 10px 18px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  min-height: 44px;
+}
+
+.restart-btn:hover {
+  background: var(--btn-hover);
+}
+
+.restart-btn:active {
+  transform: translateY(1px);
+}
+
+/* ========================================
+   Game Board
+   ======================================== */
+.game-area {
+  position: relative;
+  touch-action: none;
+}
+
+.board-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: var(--board-gap);
+  background: var(--board-bg);
+  padding: var(--board-gap);
+  border-radius: var(--board-radius);
+  aspect-ratio: 1 / 1;
+  position: relative;
+}
+
+.board-cell {
+  background: var(--cell-bg);
+  border-radius: var(--tile-radius);
+}
+
+.board-tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--tile-radius);
+  font-weight: 700;
+  font-size: var(--tile-font-lg);
+  color: var(--text-dark);
+  width: 100%;
+  height: 100%;
+}
+
+.board-tile-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  backface-visibility: hidden;
+}
+
+.board-tile-inner.is-new {
+  animation: tile-appear 0.2s ease-in-out;
+}
+
+.board-tile-inner.is-merged {
+  animation: tile-pop 0.15s ease-in-out;
+}
+
+@keyframes tile-appear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes tile-pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Tile colors */
+.tile-empty {
+  background: transparent;
+}
+
+.tile-2 {
+  background: var(--tile-2);
+  color: var(--text-dark);
+}
+.tile-4 {
+  background: var(--tile-4);
+  color: var(--text-dark);
+}
+.tile-8 {
+  background: var(--tile-8);
+  color: var(--text-light);
+}
+.tile-16 {
+  background: var(--tile-16);
+  color: var(--text-light);
+}
+.tile-32 {
+  background: var(--tile-32);
+  color: var(--text-light);
+}
+.tile-64 {
+  background: var(--tile-64);
+  color: var(--text-light);
+}
+.tile-128 {
+  background: var(--tile-128);
+  color: var(--text-light);
+  box-shadow: 0 0 10px rgba(243, 215, 116, 0.3);
+}
+.tile-256 {
+  background: var(--tile-256);
+  color: var(--text-light);
+  box-shadow: 0 0 10px rgba(243, 215, 116, 0.4);
+}
+.tile-512 {
+  background: var(--tile-512);
+  color: var(--text-light);
+  box-shadow: 0 0 10px rgba(243, 215, 116, 0.5);
+}
+.tile-1024 {
+  background: var(--tile-1024);
+  color: var(--text-light);
+  box-shadow: 0 0 10px rgba(243, 215, 116, 0.6);
+  font-size: var(--tile-font-md);
+}
+.tile-2048 {
+  background: var(--tile-2048);
+  color: var(--text-light);
+  box-shadow: 0 0 10px rgba(243, 215, 116, 0.7);
+  font-size: var(--tile-font-md);
+}
+.tile-super {
+  background: var(--tile-super);
+  color: var(--text-light);
+  font-size: var(--tile-font-sm);
+}
+
+/* ========================================
+   Game Overlay
+   ======================================== */
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--overlay-bg);
+  border-radius: var(--board-radius);
+  z-index: 10;
+  animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(2px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.game-overlay-content {
+  text-align: center;
+}
+
+.game-overlay-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 12px;
+}
+
+.game-overlay-msg {
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+.overlay-btn {
+  font-size: 18px;
+  padding: 12px 24px;
+  min-height: 48px;
+}
+
+/* ========================================
+   Responsive (Mobile)
+   ======================================== */
+@media (max-width: 520px) {
+  body {
+    padding: 12px 10px;
+  }
+
+  .app-header h1 {
+    font-size: 48px;
+  }
+
+  .app-subtitle {
+    font-size: 14px;
+  }
+
+  :root {
+    --board-gap: 10px;
+    --tile-font-lg: 35px;
+    --tile-font-md: 28px;
+    --tile-font-sm: 22px;
+    --tile-font-xs: 16px;
+  }
+
+  .score-box {
+    padding: 6px 12px;
+    min-width: 60px;
+  }
+
+  .score-label {
+    font-size: 11px;
+  }
+
+  .score-value {
+    font-size: 18px;
+  }
+
+  .restart-btn {
+    font-size: 14px;
+    padding: 8px 14px;
+  }
+
+  .game-overlay-title {
+    font-size: 36px;
+  }
+
+  .game-overlay-msg {
+    font-size: 15px;
+  }
+
+  .app-footer {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --board-gap: 8px;
+    --tile-font-lg: 28px;
+    --tile-font-md: 22px;
+    --tile-font-sm: 18px;
+  }
+}
+
+/* Landscape phones with short height */
+@media (max-height: 450px) and (orientation: landscape) {
+  body {
+    padding: 8px 10px;
+    align-items: center;
+  }
+
+  .app-header {
+    margin-bottom: 6px;
+  }
+
+  .app-header h1 {
+    font-size: 36px;
+  }
+
+  .app-subtitle {
+    font-size: 12px;
+  }
+
+  .score-board {
+    margin-bottom: 10px;
+  }
+
+  .app-footer {
+    display: none;
+  }
+}
