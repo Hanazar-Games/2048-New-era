@@ -34,7 +34,7 @@ export function ScoreBoard({ score, bestScore, onRestart }: ScoreBoardProps) {
           <span className="score-value">{bestScore}</span>
         </div>
       </div>
-      <button type="button" className="restart-btn" onClick={onRestart}>
+      <button type="button" className="restart-btn" onClick={onRestart} aria-label="重新开始游戏">
         重新开始
       </button>
     </div>

@@ -9,7 +9,7 @@ export function GameOverlay({ showWin, showGameOver, onRestart, onContinue }: Ga
   if (!showWin && !showGameOver) return null
 
   return (
-    <div className="game-overlay">
+    <div className="game-overlay" role="dialog" aria-modal="true" aria-label={showGameOver ? '游戏结束' : '胜利'}>
       <div className="game-overlay-content">
         <h2 className="game-overlay-title">{showGameOver ? '游戏结束' : '你赢了！'}</h2>
         <p className="game-overlay-msg">

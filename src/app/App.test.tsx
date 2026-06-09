@@ -10,7 +10,7 @@ describe('App', () => {
     expect(screen.getByText('New Era')).toBeInTheDocument()
     expect(screen.getByText('得分')).toBeInTheDocument()
     expect(screen.getByText('最高分')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '重新开始' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '重新开始游戏' })).toBeInTheDocument()
   })
 
   it('renders game board with initial tiles', () => {
@@ -37,7 +37,7 @@ describe('App', () => {
 
   it('restart button resets the score to 0', async () => {
     render(<App />)
-    const restartBtn = screen.getByRole('button', { name: '重新开始' })
+    const restartBtn = screen.getByRole('button', { name: '重新开始游戏' })
 
     await act(async () => {
       fireEvent.click(restartBtn)

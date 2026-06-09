@@ -8,7 +8,7 @@ export default function App() {
     useGame()
 
   return (
-    <div className="app">
+    <div className="app" role="application" aria-label="2048 游戏">
       <header className="app-header">
         <h1>2048</h1>
         <p className="app-subtitle">New Era</p>
@@ -16,6 +16,8 @@ export default function App() {
       <ScoreBoard score={state.score} bestScore={state.bestScore} onRestart={restart} />
       <div
         className="game-area"
+        role="region"
+        aria-label="游戏棋盘"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
