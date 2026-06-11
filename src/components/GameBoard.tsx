@@ -62,7 +62,7 @@ export function GameBoard({ board }: GameBoardProps) {
             }}
           >
             <div
-              className={`board-tile-inner ${tile.isNew ? 'is-new' : ''} ${tile.isMerged ? 'is-merged' : ''}`}
+              className={`board-tile-inner${tile.isNew ? ' is-new' : ''}${tile.isMerged ? ' is-merged' : ''}`}
             >
               {getTileText(tile.value)}
             </div>

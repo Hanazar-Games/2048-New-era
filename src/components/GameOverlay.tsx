@@ -16,11 +16,11 @@ export function GameOverlay({ showWin, showGameOver, onRestart, onContinue }: Ga
           {showGameOver ? '没有可移动的格子了' : '达成了 2048，继续挑战更高分吧！'}
         </p>
         {showGameOver ? (
-          <button type="button" className="restart-btn overlay-btn" onClick={onRestart}>
+          <button type="button" className="restart-btn overlay-btn" onClick={onRestart} aria-label="再试一次">
             再试一次
           </button>
         ) : (
-          <button type="button" className="restart-btn overlay-btn" onClick={onContinue}>
+          <button type="button" className="restart-btn overlay-btn" onClick={onContinue} aria-label="继续游戏">
             继续游戏
           </button>
         )}

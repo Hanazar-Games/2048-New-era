@@ -32,6 +32,7 @@
   /* Score board */
   --score-bg: #bbada0;
   --score-text: #fff;
+  --score-label-text: #d6cdc4;
 
   /* Buttons */
   --btn-bg: #8f7a66;
@@ -86,6 +87,21 @@ body {
 #root {
   width: 100%;
   max-width: 500px;
+}
+
+/* ========================================
+   Screen-reader only
+   ======================================== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /* ========================================
@@ -156,7 +172,7 @@ body {
 .score-label {
   font-size: 13px;
   font-weight: 600;
-  color: var(--cell-bg);
+  color: var(--score-label-text);
   text-transform: uppercase;
 }
 

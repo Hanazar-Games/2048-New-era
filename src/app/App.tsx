@@ -14,6 +14,12 @@ export default function App() {
         <p className="app-subtitle">New Era</p>
       </header>
       <ScoreBoard score={state.score} bestScore={state.bestScore} onRestart={restart} />
+      {/* Live region for screen readers to announce score changes and game state */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        得分 {state.score}，最高分 {state.bestScore}
+        {state.isOver ? '。游戏结束' : ''}
+        {showWinOverlay ? '。达成 2048' : ''}
+      </div>
       <div
         className="game-area"
         role="region"
