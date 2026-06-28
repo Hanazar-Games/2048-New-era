@@ -27,7 +27,9 @@ export function ScoreBoard({ score, bestScore, onRestart }: ScoreBoardProps) {
       <div className="score-boxes">
         <div className="score-box">
           <span className="score-label">得分</span>
-          <span className={`score-value ${bump ? 'is-bump' : ''}`} key={score}>{score}</span>
+          <span className={`score-value ${bump ? 'is-bump' : ''}`} key={score}>
+            {score}
+          </span>
         </div>
         <div className="score-box">
           <span className="score-label">最高分</span>

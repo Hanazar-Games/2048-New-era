@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useId } from 'react'
 import type { Board } from '../features/game/types/game'
 
 function getTileClass(value: number): string {
@@ -23,26 +23,37 @@ type GameBoardProps = {
   board: Board
 }
 
-export function GameBoard({ board }: GameBoardProps) {
-  const prevBoardRef = useRef<Board>(board.map((r) => [...r]))
+const previousBoards = new Map<string, Board>()
 
-  const meta = new Map<string, TileMeta>()
-  const prev = prevBoardRef.current
-
+function getTileMeta(board: Board, prev: Board): TileMeta[] {
+  const meta: TileMeta[] = []
   board.forEach((row, r) => {
     row.forEach((value, c) => {
       if (value !== 0) {
-        const key = `${r},${c}`
         const isNew = prev[r][c] === 0
         const isMerged = !isNew && prev[r][c] < value
-        meta.set(key, { row: r, col: c, value, isNew, isMerged })
+        meta.push({ row: r, col: c, value, isNew, isMerged })
       }
     })
   })
 
+  return meta
+}
+
+export function GameBoard({ board }: GameBoardProps) {
+  const boardId = useId()
+  const tiles = getTileMeta(board, previousBoards.get(boardId) ?? board)
+
   useEffect(() => {
-    prevBoardRef.current = board.map((r) => [...r])
-  }, [board])
+    previousBoards.set(
+      boardId,
+      board.map((r) => [...r])
+    )
+
+    return () => {
+      previousBoards.delete(boardId)
+    }
+  }, [board, boardId])
 
   return (
     <div className="board-container">
@@ -52,7 +63,7 @@ export function GameBoard({ board }: GameBoardProps) {
           <div key={`bg-${i}`} className="board-cell" />
         ))}
         {/* tiles */}
-        {Array.from(meta.values()).map((tile) => (
+        {tiles.map((tile) => (
           <div
             key={`tile-${tile.row}-${tile.col}-${tile.value}`}
             className={`board-tile ${getTileClass(tile.value)}`}

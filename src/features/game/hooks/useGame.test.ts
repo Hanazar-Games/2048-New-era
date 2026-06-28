@@ -123,7 +123,7 @@ describe('useGame', () => {
         touches,
         changedTouches,
         preventDefault: vi.fn(),
-      } as unknown as React.TouchEvent)
+      }) as unknown as React.TouchEvent
 
     act(() => {
       result.current.onTouchStart(makeEvent([mockTouch], [mockTouch]))
