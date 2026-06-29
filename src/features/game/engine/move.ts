@@ -1,4 +1,4 @@
-import type { Board, Direction, MoveResult } from '../types/game'
+import type { Board, Direction, MoveResult, Position } from '../types/game'
 import { BOARD_SIZE, cloneBoard, createEmptyBoard } from './board'
 
 /**
@@ -10,12 +10,13 @@ import { BOARD_SIZE, cloneBoard, createEmptyBoard } from './board'
  *   [2, 0, 2, 4] -> [4, 4, 0, 0]
  *   [4, 0, 4, 4] -> [8, 4, 0, 0]
  */
-function slideRowLeft(row: number[]): { row: number[]; score: number } {
+function slideRowLeft(row: number[]): { row: number[]; score: number; mergedCols: number[] } {
   // 1. 过滤空位
   const nonZero = row.filter((v) => v !== 0)
 
   // 2. 合并相邻相同值，仅合并一次
   const merged: number[] = []
+  const mergedCols: number[] = []
   let score = 0
   let skipNext = false
 
@@ -26,6 +27,7 @@ function slideRowLeft(row: number[]): { row: number[]; score: number } {
     }
     if (i + 1 < nonZero.length && nonZero[i] === nonZero[i + 1]) {
       const value = nonZero[i] * 2
+      mergedCols.push(merged.length)
       merged.push(value)
       score += value
       skipNext = true
@@ -39,7 +41,7 @@ function slideRowLeft(row: number[]): { row: number[]; score: number } {
     merged.push(0)
   }
 
-  return { row: merged, score }
+  return { row: merged, score, mergedCols }
 }
 
 /**
@@ -68,12 +70,14 @@ function reverseRows(board: Board): Board {
 function slideBoardLeft(board: Board): MoveResult {
   let totalScore = 0
   const newBoard: Board = []
+  const mergedPositions: Position[] = []
   let moved = false
 
   for (let r = 0; r < BOARD_SIZE; r++) {
-    const { row: newRow, score } = slideRowLeft(board[r])
+    const { row: newRow, score, mergedCols } = slideRowLeft(board[r])
     newBoard.push(newRow)
     totalScore += score
+    mergedCols.forEach((col) => mergedPositions.push({ row: r, col }))
     for (let c = 0; c < BOARD_SIZE; c++) {
       if (board[r][c] !== newRow[c]) {
         moved = true
@@ -81,7 +85,19 @@ function slideBoardLeft(board: Board): MoveResult {
     }
   }
 
-  return { board: newBoard, scoreGained: totalScore, moved }
+  return { board: newBoard, scoreGained: totalScore, moved, mergedPositions }
+}
+
+function mapRightPosition(pos: Position): Position {
+  return { row: pos.row, col: BOARD_SIZE - 1 - pos.col }
+}
+
+function mapUpPosition(pos: Position): Position {
+  return { row: pos.col, col: pos.row }
+}
+
+function mapDownPosition(pos: Position): Position {
+  return { row: BOARD_SIZE - 1 - pos.col, col: pos.row }
 }
 
 /**
@@ -100,6 +116,7 @@ export function moveBoard(board: Board, direction: Direction): MoveResult {
         board: reverseRows(result.board),
         scoreGained: result.scoreGained,
         moved: result.moved,
+        mergedPositions: result.mergedPositions.map(mapRightPosition),
       }
     }
 
@@ -110,6 +127,7 @@ export function moveBoard(board: Board, direction: Direction): MoveResult {
         board: transpose(result.board),
         scoreGained: result.scoreGained,
         moved: result.moved,
+        mergedPositions: result.mergedPositions.map(mapUpPosition),
       }
     }
 
@@ -121,12 +139,13 @@ export function moveBoard(board: Board, direction: Direction): MoveResult {
         board: transpose(reverseRows(result.board)),
         scoreGained: result.scoreGained,
         moved: result.moved,
+        mergedPositions: result.mergedPositions.map(mapDownPosition),
       }
     }
 
     default:
       // exhaustive check
-      return { board: cloneBoard(board), scoreGained: 0, moved: false }
+      return { board: cloneBoard(board), scoreGained: 0, moved: false, mergedPositions: [] }
   }
 }
 

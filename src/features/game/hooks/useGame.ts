@@ -32,12 +32,14 @@ export function useGame(): UseGameReturn {
   // without forcing the effect (and its listener) to re-register.
   const isOverRef = useRef(state.isOver)
   const isWonRef = useRef(state.isWon)
+  const stateRef = useRef(state)
   const isWinDismissedRef = useRef(isWinDismissed)
 
   useEffect(() => {
+    stateRef.current = state
     isOverRef.current = state.isOver
     isWonRef.current = state.isWon
-  }, [state.isOver, state.isWon])
+  }, [state])
 
   useEffect(() => {
     isWinDismissedRef.current = isWinDismissed
@@ -52,15 +54,20 @@ export function useGame(): UseGameReturn {
   const move = useCallback(
     (direction: Direction) => {
       if (moveLockRef.current || isOverRef.current) return
+
+      const current = stateRef.current
+      const next = moveGameState(current, direction)
+      if (next === current) return
+
       moveLockRef.current = true
 
-      setState((prev) => {
-        const next = moveGameState(prev, direction)
-        if (next.bestScore > prev.bestScore) {
-          saveBestScore(next.bestScore)
-        }
-        return next
-      })
+      if (next.bestScore > current.bestScore) {
+        saveBestScore(next.bestScore)
+      }
+      stateRef.current = next
+      isOverRef.current = next.isOver
+      isWonRef.current = next.isWon
+      setState(next)
 
       if (moveTimerRef.current) {
         clearTimeout(moveTimerRef.current)
@@ -77,7 +84,13 @@ export function useGame(): UseGameReturn {
     }
     moveLockRef.current = false
     setIsWinDismissed(false)
-    setState((prev) => restartGameState(prev.bestScore))
+    setState((prev) => {
+      const next = restartGameState(prev.bestScore)
+      stateRef.current = next
+      isOverRef.current = next.isOver
+      isWonRef.current = next.isWon
+      return next
+    })
   }, [])
 
   const dismissWin = useCallback(() => {
@@ -192,17 +205,14 @@ export function useGame(): UseGameReturn {
       // When game is over, ignore swipes (user must click the overlay button)
       if (isOverRef.current) return
 
-      // When win overlay is visible, swipe dismisses it instead of moving
+      const direction = absDx > absDy ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up'
+
+      // Match keyboard behavior: a directional swipe dismisses the win overlay and continues.
       if (isWonRef.current && !isWinDismissedRef.current) {
         dismissWin()
-        return
       }
 
-      if (absDx > absDy) {
-        move(dx > 0 ? 'right' : 'left')
-      } else {
-        move(dy > 0 ? 'down' : 'up')
-      }
+      move(direction)
     },
     [move, dismissWin]
   )

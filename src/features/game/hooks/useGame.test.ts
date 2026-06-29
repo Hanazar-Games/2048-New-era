@@ -9,6 +9,7 @@ describe('useGame', () => {
   })
 
   afterEach(() => {
+    vi.restoreAllMocks()
     vi.useRealTimers()
   })
 
@@ -170,5 +171,26 @@ describe('useGame', () => {
 
     // After lock release, move should be processed.
     expect(result.current.state.board).toBeDefined()
+  })
+
+  it('does not lock out a valid move after an invalid move', () => {
+    const randomValues = [0, 0.1, 0, 0.95, 0, 0.1]
+    let index = 0
+    vi.spyOn(Math, 'random').mockImplementation(() => randomValues[index++] ?? 0)
+
+    const { result } = renderHook(() => useGame())
+    expect(result.current.state.board[0]).toEqual([2, 4, 0, 0])
+
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }))
+    })
+
+    expect(result.current.state.board[0]).toEqual([2, 4, 0, 0])
+
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }))
+    })
+
+    expect(result.current.state.board[0]).not.toEqual([2, 4, 0, 0])
   })
 })

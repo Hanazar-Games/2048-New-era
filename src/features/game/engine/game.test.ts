@@ -58,6 +58,8 @@ describe('moveGameState', () => {
     // 合并了两个 2 -> 4，然后新增一个块，所以应该有 2 个非零块
     expect(nonZero).toHaveLength(2)
     expect(after.score).toBe(4)
+    expect(after.lastMerged).toEqual([{ row: 0, col: 0 }])
+    expect(after.lastAdded).toBeDefined()
   })
 
   it('updates bestScore when new score exceeds it', () => {
@@ -178,6 +180,8 @@ describe('restartGameState', () => {
     expect(restarted.bestScore).toBe(500)
     expect(restarted.isOver).toBe(false)
     expect(restarted.isWon).toBe(false)
+    expect(restarted.lastAdded).toBeUndefined()
+    expect(restarted.lastMerged).toEqual([])
     const nonZero = restarted.board.flat().filter((v) => v !== 0)
     expect(nonZero).toHaveLength(2)
   })

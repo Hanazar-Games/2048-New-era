@@ -1,5 +1,5 @@
 import { useEffect, useId } from 'react'
-import type { Board } from '../features/game/types/game'
+import type { Board, Position } from '../features/game/types/game'
 
 function getTileClass(value: number): string {
   if (value === 0) return 'tile-empty'
@@ -21,17 +21,35 @@ type TileMeta = {
 
 type GameBoardProps = {
   board: Board
+  lastAdded?: Position
+  lastMerged?: Position[]
 }
 
 const previousBoards = new Map<string, Board>()
 
-function getTileMeta(board: Board, prev: Board): TileMeta[] {
+function samePosition(a: Position | undefined, row: number, col: number): boolean {
+  return a?.row === row && a.col === col
+}
+
+function includesPosition(positions: Position[] | undefined, row: number, col: number): boolean {
+  return positions?.some((pos) => pos.row === row && pos.col === col) ?? false
+}
+
+function getTileMeta(
+  board: Board,
+  prev: Board,
+  lastAdded?: Position,
+  lastMerged?: Position[]
+): TileMeta[] {
+  const hasEngineMeta = lastAdded !== undefined || lastMerged !== undefined
   const meta: TileMeta[] = []
   board.forEach((row, r) => {
     row.forEach((value, c) => {
       if (value !== 0) {
-        const isNew = prev[r][c] === 0
-        const isMerged = !isNew && prev[r][c] < value
+        const isNew = hasEngineMeta ? samePosition(lastAdded, r, c) : prev[r][c] === 0
+        const isMerged = hasEngineMeta
+          ? includesPosition(lastMerged, r, c)
+          : !isNew && prev[r][c] < value
         meta.push({ row: r, col: c, value, isNew, isMerged })
       }
     })
@@ -40,9 +58,9 @@ function getTileMeta(board: Board, prev: Board): TileMeta[] {
   return meta
 }
 
-export function GameBoard({ board }: GameBoardProps) {
+export function GameBoard({ board, lastAdded, lastMerged }: GameBoardProps) {
   const boardId = useId()
-  const tiles = getTileMeta(board, previousBoards.get(boardId) ?? board)
+  const tiles = getTileMeta(board, previousBoards.get(boardId) ?? board, lastAdded, lastMerged)
 
   useEffect(() => {
     previousBoards.set(

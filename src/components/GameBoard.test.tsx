@@ -92,4 +92,22 @@ describe('GameBoard', () => {
     rerender(<GameBoard board={boardWithTile} />)
     expect(container.querySelector('.is-new')).not.toBeInTheDocument()
   })
+
+  it('uses engine metadata to distinguish merged tiles from newly added tiles', () => {
+    const board: Board = [
+      [4, 0, 0, 2],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+    ]
+
+    render(
+      <GameBoard board={board} lastMerged={[{ row: 0, col: 0 }]} lastAdded={{ row: 0, col: 3 }} />
+    )
+
+    expect(screen.getByText('4')).toHaveClass('is-merged')
+    expect(screen.getByText('4')).not.toHaveClass('is-new')
+    expect(screen.getByText('2')).toHaveClass('is-new')
+    expect(screen.getByText('2')).not.toHaveClass('is-merged')
+  })
 })

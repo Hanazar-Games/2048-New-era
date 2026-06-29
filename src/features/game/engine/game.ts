@@ -48,6 +48,7 @@ export function createGameState(rng: RNG = Math.random): GameState {
     bestScore: 0,
     isOver: !canMoveAny(board),
     isWon: false,
+    lastMerged: [],
   }
 }
 
@@ -90,6 +91,8 @@ export function moveGameState(
     isOver: newIsOver,
     isWon: newIsWon,
     lastMove: direction,
+    lastAdded: afterAdd.added ?? undefined,
+    lastMerged: moveResult.mergedPositions,
   }
 }
 
@@ -104,5 +107,6 @@ export function restartGameState(prevBestScore: number = 0, rng: RNG = Math.rand
     bestScore: prevBestScore,
     isOver: !canMoveAny(board),
     isWon: false,
+    lastMerged: [],
   }
 }

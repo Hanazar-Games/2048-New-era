@@ -44,6 +44,10 @@ describe('moveBoard / left', () => {
     expect(result.board[0]).toEqual([4, 4, 0, 0])
     expect(result.scoreGained).toBe(8)
     expect(result.moved).toBe(true)
+    expect(result.mergedPositions).toEqual([
+      { row: 0, col: 0 },
+      { row: 0, col: 1 },
+    ])
   })
 
   it('does not chain-merge newly created tiles', () => {
@@ -97,6 +101,10 @@ describe('moveBoard / right', () => {
     const result = moveBoard(board, 'right')
     expect(result.board[0]).toEqual([0, 0, 4, 4])
     expect(result.scoreGained).toBe(8)
+    expect(result.mergedPositions).toEqual([
+      { row: 0, col: 3 },
+      { row: 0, col: 2 },
+    ])
   })
 })
 
@@ -114,6 +122,10 @@ describe('moveBoard / up', () => {
     expect(result.board[2][0]).toBe(0)
     expect(result.board[3][0]).toBe(0)
     expect(result.scoreGained).toBe(8)
+    expect(result.mergedPositions).toEqual([
+      { row: 0, col: 0 },
+      { row: 1, col: 0 },
+    ])
   })
 })
 
@@ -131,6 +143,10 @@ describe('moveBoard / down', () => {
     expect(result.board[0][0]).toBe(0)
     expect(result.board[1][0]).toBe(0)
     expect(result.scoreGained).toBe(8)
+    expect(result.mergedPositions).toEqual([
+      { row: 3, col: 0 },
+      { row: 2, col: 0 },
+    ])
   })
 })
 

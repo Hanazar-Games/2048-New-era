@@ -31,6 +31,8 @@ export type MoveResult = {
   scoreGained: number
   /** 棋盘是否发生了变化 */
   moved: boolean
+  /** 本次移动中发生合并的位置 */
+  mergedPositions: Position[]
 }
 
 /**
@@ -44,6 +46,10 @@ export type GameState = {
   isWon: boolean
   /** 上一步的方向，undefined 表示还未移动 */
   lastMove?: Direction
+  /** 上一步新增数字块的位置 */
+  lastAdded?: Position
+  /** 上一步合并数字块的位置 */
+  lastMerged: Position[]
 }
 
 /**

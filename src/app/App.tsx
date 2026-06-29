@@ -28,7 +28,7 @@ export default function App() {
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        <GameBoard board={state.board} />
+        <GameBoard board={state.board} lastAdded={state.lastAdded} lastMerged={state.lastMerged} />
         <GameOverlay
           showWin={showWinOverlay}
           showGameOver={state.isOver}
