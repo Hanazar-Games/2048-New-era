@@ -3,6 +3,16 @@ import { renderHook, act } from '@testing-library/react'
 import { useGame } from './useGame'
 
 describe('useGame', () => {
+  const makeTouch = (identifier: number, clientX: number, clientY: number) =>
+    ({ identifier, clientX, clientY }) as unknown as Touch
+
+  const makeTouchEvent = (touches: Touch[], changedTouches: Touch[]) =>
+    ({
+      touches,
+      changedTouches,
+      preventDefault: vi.fn(),
+    }) as unknown as React.TouchEvent
+
   beforeEach(() => {
     localStorage.clear()
     vi.useFakeTimers({ shouldAdvanceTime: true })
@@ -118,27 +128,47 @@ describe('useGame', () => {
     const { result } = renderHook(() => useGame())
 
     // jsdom does not support Touch, so we pass minimal mocked touch objects.
-    const mockTouch = { identifier: 1, clientX: 100, clientY: 100 } as unknown as Touch
-    const makeEvent = (touches: Touch[], changedTouches: Touch[]) =>
-      ({
-        touches,
-        changedTouches,
-        preventDefault: vi.fn(),
-      }) as unknown as React.TouchEvent
+    const mockTouch = makeTouch(1, 100, 100)
 
     act(() => {
-      result.current.onTouchStart(makeEvent([mockTouch], [mockTouch]))
+      result.current.onTouchStart(makeTouchEvent([mockTouch], [mockTouch]))
     })
 
     act(() => {
-      result.current.onTouchMove(makeEvent([mockTouch], [mockTouch]))
+      result.current.onTouchMove(makeTouchEvent([mockTouch], [mockTouch]))
     })
 
     act(() => {
-      result.current.onTouchEnd(makeEvent([], [mockTouch]))
+      result.current.onTouchEnd(makeTouchEvent([], [mockTouch]))
     })
 
     expect(result.current.state).toBeDefined()
+  })
+
+  it('cancels a pending swipe when a second finger touches the board', () => {
+    const randomValues = [0, 0.1, 0, 0.95, 0, 0.1]
+    let index = 0
+    vi.spyOn(Math, 'random').mockImplementation(() => randomValues[index++] ?? 0)
+
+    const { result } = renderHook(() => useGame())
+    const initialBoard = result.current.state.board.map((row) => [...row])
+    const firstTouchStart = makeTouch(1, 100, 100)
+    const firstTouchEnd = makeTouch(1, 220, 100)
+    const secondTouch = makeTouch(2, 120, 100)
+
+    act(() => {
+      result.current.onTouchStart(makeTouchEvent([firstTouchStart], [firstTouchStart]))
+    })
+
+    act(() => {
+      result.current.onTouchStart(makeTouchEvent([firstTouchStart, secondTouch], [secondTouch]))
+    })
+
+    act(() => {
+      result.current.onTouchEnd(makeTouchEvent([], [firstTouchEnd]))
+    })
+
+    expect(result.current.state.board).toEqual(initialBoard)
   })
 
   it('move lock prevents rapid repeated moves', () => {

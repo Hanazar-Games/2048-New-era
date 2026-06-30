@@ -83,6 +83,7 @@ export function useGame(): UseGameReturn {
       moveTimerRef.current = null
     }
     moveLockRef.current = false
+    isWinDismissedRef.current = false
     setIsWinDismissed(false)
     setState((prev) => {
       const next = restartGameState(prev.bestScore)
@@ -94,6 +95,7 @@ export function useGame(): UseGameReturn {
   }, [])
 
   const dismissWin = useCallback(() => {
+    isWinDismissedRef.current = true
     setIsWinDismissed(true)
   }, [])
 
@@ -167,7 +169,10 @@ export function useGame(): UseGameReturn {
 
   // Touch / swipe controls
   const onTouchStart = useCallback((e: React.TouchEvent) => {
-    if (e.touches.length !== 1) return
+    if (e.touches.length !== 1) {
+      touchStartRef.current = null
+      return
+    }
     const t = e.touches[0]
     touchStartRef.current = { x: t.clientX, y: t.clientY, id: t.identifier }
   }, [])
