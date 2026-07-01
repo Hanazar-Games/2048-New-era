@@ -4,9 +4,17 @@ type ScoreBoardProps = {
   score: number
   bestScore: number
   onRestart: () => void
+  soundEnabled: boolean
+  onToggleSound: () => void
 }
 
-export function ScoreBoard({ score, bestScore, onRestart }: ScoreBoardProps) {
+export function ScoreBoard({
+  score,
+  bestScore,
+  onRestart,
+  soundEnabled,
+  onToggleSound,
+}: ScoreBoardProps) {
   const [bump, setBump] = useState(false)
   const prevScoreRef = useRef(score)
 
@@ -36,9 +44,22 @@ export function ScoreBoard({ score, bestScore, onRestart }: ScoreBoardProps) {
           <span className="score-value">{bestScore}</span>
         </div>
       </div>
-      <button type="button" className="restart-btn" onClick={onRestart} aria-label="重新开始游戏">
-        重新开始
-      </button>
+      <div className="score-actions">
+        <button type="button" className="restart-btn" onClick={onRestart} aria-label="重新开始游戏">
+          重新开始
+        </button>
+        <button
+          type="button"
+          className={`sound-btn ${soundEnabled ? 'is-on' : ''}`}
+          onClick={onToggleSound}
+          aria-pressed={soundEnabled}
+          aria-label={soundEnabled ? '关闭音效' : '开启音效'}
+          title={soundEnabled ? '关闭音效' : '开启音效'}
+        >
+          <span aria-hidden="true">{soundEnabled ? '♪' : '×'}</span>
+          <span>音效</span>
+        </button>
+      </div>
     </div>
   )
 }

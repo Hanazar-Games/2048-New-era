@@ -4,8 +4,17 @@ import { GameBoard } from '../components/GameBoard'
 import { GameOverlay } from '../components/GameOverlay'
 
 export default function App() {
-  const { state, restart, dismissWin, onTouchStart, onTouchMove, onTouchEnd, showWinOverlay } =
-    useGame()
+  const {
+    state,
+    restart,
+    dismissWin,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd,
+    showWinOverlay,
+    soundEnabled,
+    toggleSound,
+  } = useGame()
 
   return (
     <div className="app" role="application" aria-label="2048 游戏">
@@ -13,7 +22,13 @@ export default function App() {
         <h1>2048</h1>
         <p className="app-subtitle">New Era</p>
       </header>
-      <ScoreBoard score={state.score} bestScore={state.bestScore} onRestart={restart} />
+      <ScoreBoard
+        score={state.score}
+        bestScore={state.bestScore}
+        onRestart={restart}
+        soundEnabled={soundEnabled}
+        onToggleSound={toggleSound}
+      />
       {/* Live region for screen readers to announce score changes and game state */}
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         得分 {state.score}，最高分 {state.bestScore}

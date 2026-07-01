@@ -11,6 +11,7 @@ describe('App', () => {
     expect(screen.getByText('得分')).toBeInTheDocument()
     expect(screen.getByText('最高分')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '重新开始游戏' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '开启音效' })).toBeInTheDocument()
   })
 
   it('renders game board with initial tiles', () => {

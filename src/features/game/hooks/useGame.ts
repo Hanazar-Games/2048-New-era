@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Direction, GameState } from '../types/game'
 import { createGameState, moveGameState, restartGameState } from '../engine/game'
-import { loadBestScore, saveBestScore } from '../utils/storage'
+import { loadBestScore, loadSoundEnabled, saveBestScore, saveSoundEnabled } from '../utils/storage'
+import { playSound } from '../utils/sound'
 
 const TOUCH_THRESHOLD = 30
 const MOVE_LOCK_MS = 120
@@ -14,6 +15,8 @@ export type UseGameReturn = {
   onTouchMove: (e: React.TouchEvent) => void
   onTouchEnd: (e: React.TouchEvent) => void
   showWinOverlay: boolean
+  soundEnabled: boolean
+  toggleSound: () => void
 }
 
 export function useGame(): UseGameReturn {
@@ -23,6 +26,7 @@ export function useGame(): UseGameReturn {
   })
 
   const [isWinDismissed, setIsWinDismissed] = useState(false)
+  const [soundEnabled, setSoundEnabled] = useState(() => loadSoundEnabled())
 
   const touchStartRef = useRef<{ x: number; y: number; id: number } | null>(null)
   const moveLockRef = useRef(false)
@@ -34,6 +38,7 @@ export function useGame(): UseGameReturn {
   const isWonRef = useRef(state.isWon)
   const stateRef = useRef(state)
   const isWinDismissedRef = useRef(isWinDismissed)
+  const soundEnabledRef = useRef(soundEnabled)
 
   useEffect(() => {
     stateRef.current = state
@@ -44,6 +49,10 @@ export function useGame(): UseGameReturn {
   useEffect(() => {
     isWinDismissedRef.current = isWinDismissed
   }, [isWinDismissed])
+
+  useEffect(() => {
+    soundEnabledRef.current = soundEnabled
+  }, [soundEnabled])
 
   const showWinOverlay = state.isWon && !isWinDismissed && !state.isOver
 
@@ -63,6 +72,17 @@ export function useGame(): UseGameReturn {
 
       if (next.bestScore > current.bestScore) {
         saveBestScore(next.bestScore)
+      }
+      if (soundEnabledRef.current) {
+        if (!current.isWon && next.isWon) {
+          playSound('win')
+        } else if (!current.isOver && next.isOver) {
+          playSound('game-over')
+        } else if (next.score > current.score) {
+          playSound('merge')
+        } else {
+          playSound('move')
+        }
       }
       stateRef.current = next
       isOverRef.current = next.isOver
@@ -97,6 +117,18 @@ export function useGame(): UseGameReturn {
   const dismissWin = useCallback(() => {
     isWinDismissedRef.current = true
     setIsWinDismissed(true)
+  }, [])
+
+  const toggleSound = useCallback(() => {
+    setSoundEnabled((prev) => {
+      const next = !prev
+      soundEnabledRef.current = next
+      saveSoundEnabled(next)
+      if (next) {
+        playSound('move')
+      }
+      return next
+    })
   }, [])
 
   const handleDirectionKey = useCallback(
@@ -239,5 +271,7 @@ export function useGame(): UseGameReturn {
     onTouchMove,
     onTouchEnd,
     showWinOverlay,
+    soundEnabled,
+    toggleSound,
   }
 }

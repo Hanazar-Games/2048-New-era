@@ -152,11 +152,19 @@ body {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .score-boxes {
   display: flex;
   gap: 8px;
+}
+
+.score-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .score-box {
@@ -217,8 +225,49 @@ body {
   background: var(--btn-hover);
 }
 
+.restart-btn:focus-visible,
+.sound-btn:focus-visible {
+  outline: 3px solid rgba(237, 194, 46, 0.55);
+  outline-offset: 3px;
+}
+
 .restart-btn:active {
   transform: translateY(1px);
+}
+
+.sound-btn {
+  background: rgba(143, 122, 102, 0.14);
+  color: var(--text-dark);
+  border: 2px solid rgba(143, 122, 102, 0.28);
+  border-radius: var(--board-radius);
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.08s ease;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.sound-btn:hover {
+  background: rgba(143, 122, 102, 0.2);
+}
+
+.sound-btn:active {
+  transform: translateY(1px);
+}
+
+.sound-btn.is-on {
+  background: var(--btn-bg);
+  border-color: var(--btn-bg);
+  color: var(--btn-text);
 }
 
 /* ========================================
@@ -455,6 +504,11 @@ body {
   .restart-btn {
     font-size: 14px;
     padding: 8px 14px;
+  }
+
+  .sound-btn {
+    font-size: 13px;
+    padding: 7px 10px;
   }
 
   .game-overlay-title {

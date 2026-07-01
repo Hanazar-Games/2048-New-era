@@ -1,4 +1,5 @@
 const BEST_SCORE_KEY = '2048-best-score'
+const SOUND_ENABLED_KEY = '2048-sound-enabled'
 
 export function loadBestScore(): number {
   try {
@@ -14,6 +15,23 @@ export function loadBestScore(): number {
 export function saveBestScore(score: number): void {
   try {
     localStorage.setItem(BEST_SCORE_KEY, String(score))
+  } catch {
+    // ignore storage errors (e.g. private mode)
+  }
+}
+
+export function loadSoundEnabled(): boolean {
+  try {
+    const raw = localStorage.getItem(SOUND_ENABLED_KEY)
+    return raw === 'true'
+  } catch {
+    return false
+  }
+}
+
+export function saveSoundEnabled(enabled: boolean): void {
+  try {
+    localStorage.setItem(SOUND_ENABLED_KEY, String(enabled))
   } catch {
     // ignore storage errors (e.g. private mode)
   }

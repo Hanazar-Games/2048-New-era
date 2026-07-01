@@ -93,6 +93,18 @@ describe('useGame', () => {
     expect(result.current.showWinOverlay).toBe(false)
   })
 
+  it('toggles and persists sound preference', () => {
+    const { result } = renderHook(() => useGame())
+    expect(result.current.soundEnabled).toBe(false)
+
+    act(() => {
+      result.current.toggleSound()
+    })
+
+    expect(result.current.soundEnabled).toBe(true)
+    expect(localStorage.getItem('2048-sound-enabled')).toBe('true')
+  })
+
   it('bestScore is loaded from localStorage on init', () => {
     localStorage.setItem('2048-best-score', '512')
     const { result } = renderHook(() => useGame())

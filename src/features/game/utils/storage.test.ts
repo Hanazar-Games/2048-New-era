@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { loadBestScore, saveBestScore } from './storage'
+import { loadBestScore, loadSoundEnabled, saveBestScore, saveSoundEnabled } from './storage'
 
 const KEY = '2048-best-score'
 
@@ -45,5 +45,17 @@ describe('storage', () => {
     }
     expect(() => saveBestScore(100)).not.toThrow()
     localStorage.setItem = originalSetItem
+  })
+
+  it('defaults sound to disabled', () => {
+    expect(loadSoundEnabled()).toBe(false)
+  })
+
+  it('persists sound preference', () => {
+    saveSoundEnabled(true)
+    expect(loadSoundEnabled()).toBe(true)
+
+    saveSoundEnabled(false)
+    expect(loadSoundEnabled()).toBe(false)
   })
 })
