@@ -15,9 +15,21 @@
 - ✅ 已完成动画（tile 出现、合并、分数 bump）
 - ✅ 已完成 `localStorage` 最高分持久化
 - ✅ 已有 82 个自动化测试覆盖引擎、组件、hook、存储
-- ⏳ 待完成：E2E 测试、无障碍优化、PWA、README 部署说明
+- ✅ 已完成 GitHub Pages Actions 部署配置
+- ⏳ 待完成：E2E 测试、无障碍优化、PWA
 
 ## 当前公告
+
+### v0.1.4
+
+- 修复 GitHub Pages 线上 404：新增 Pages Actions 工作流，线上发布 `dist` 构建产物，不再直接加载源码版 `/src/main.tsx`。
+- 修复仓库子路径部署资源路径：GitHub Pages 构建时使用 `/2048-New-era/` base，避免静态资源请求跑到域名根路径。
+- 新增 favicon 资源和 HTML icon link，避免浏览器默认请求缺失的 `/favicon.ico`。
+- 复查 UI/UX/SFX/BGM 层：保留 v0.1.3 的用户主动 SFX 方案，不引入自动 BGM；按钮、音效状态和移动端布局继续走现有测试与截图检查流程。
+- 新增部署说明，明确 GitHub Pages 应使用 GitHub Actions 作为发布来源。
+- 验证通过：`npm test -- --run`、`npm run lint`、`npm run build`、`GITHUB_PAGES=true npm run build`、`npm run format:check`。
+
+## 历史公告
 
 ### v0.1.3
 
@@ -27,8 +39,6 @@
 - 当前不加入自动 BGM，避免浏览器自动播放限制和不必要打扰；后续可在设置面板中加入用户主动控制的 BGM。
 - 新增音效存储、hook 状态和 App 渲染测试，自动化测试数更新为 82。
 - 验证通过：`npm test -- --run`、`npm run lint`、`npm run build`、`npm run format:check`。
-
-## 历史公告
 
 ### v0.1.2
 
@@ -74,6 +84,17 @@
 - 代码质量：`ESLint + Prettier`
 
 如果后续要改成原生 HTML/CSS/JS，也可以，但建议所有 agent 在同一轮协作中保持一致，不要混用多套脚手架。
+
+## 部署说明
+
+当前仓库使用 GitHub Actions 发布 GitHub Pages：
+
+1. 推送到 `main` 后，`.github/workflows/deploy.yml` 会执行 `npm ci` 和 `npm run build`。
+2. Actions 构建时会设置 `GITHUB_PAGES=true`，让 Vite 使用 `/2048-New-era/` 作为资源 base。
+3. 构建完成后仅上传 `dist` 到 GitHub Pages，线上页面不应直接加载 `/src/main.tsx`。
+4. 仓库 Settings → Pages 的 Source 应选择 `GitHub Actions`。
+
+如果线上控制台再次出现 `/src/main.tsx` 404，优先检查 Pages Source 是否仍指向分支根目录，而不是 Actions。
 
 ## 产品范围
 
