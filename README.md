@@ -20,6 +20,15 @@
 
 ## 当前公告
 
+### v0.1.5
+
+- 加固 GitHub Pages 部署：新增 `build:pages` 脚本，固定使用 `/2048-New-era/` base 构建线上资源。
+- Actions 现在同时上传 Pages artifact，并发布构建产物到 `gh-pages` 分支；如果仓库 Pages Source 不能使用 Actions，可切到 `gh-pages / root`。
+- 线上复查确认当前页面仍在返回源码版 `index.html`，说明 Pages Source 仍指向分支根目录；本版提供 `gh-pages` 分支兜底来避免继续发布源码入口。
+- 验证通过：`npm test -- --run`、`npm run lint`、`npm run build`、`npm run build:pages`、`npm run format:check`。
+
+## 历史公告
+
 ### v0.1.4
 
 - 修复 GitHub Pages 线上 404：新增 Pages Actions 工作流，线上发布 `dist` 构建产物，不再直接加载源码版 `/src/main.tsx`。
@@ -28,8 +37,6 @@
 - 复查 UI/UX/SFX/BGM 层：保留 v0.1.3 的用户主动 SFX 方案，不引入自动 BGM；按钮、音效状态和移动端布局继续走现有测试与截图检查流程。
 - 新增部署说明，明确 GitHub Pages 应使用 GitHub Actions 作为发布来源。
 - 验证通过：`npm test -- --run`、`npm run lint`、`npm run build`、`GITHUB_PAGES=true npm run build`、`npm run format:check`。
-
-## 历史公告
 
 ### v0.1.3
 
@@ -87,14 +94,14 @@
 
 ## 部署说明
 
-当前仓库使用 GitHub Actions 发布 GitHub Pages：
+当前仓库优先使用 GitHub Actions 发布 GitHub Pages：
 
-1. 推送到 `main` 后，`.github/workflows/deploy.yml` 会执行 `npm ci` 和 `npm run build`。
-2. Actions 构建时会设置 `GITHUB_PAGES=true`，让 Vite 使用 `/2048-New-era/` 作为资源 base。
-3. 构建完成后仅上传 `dist` 到 GitHub Pages，线上页面不应直接加载 `/src/main.tsx`。
-4. 仓库 Settings → Pages 的 Source 应选择 `GitHub Actions`。
+1. 推送到 `main` 后，`.github/workflows/deploy.yml` 会执行 `npm ci` 和 `npm run build:pages`。
+2. `build:pages` 会用 `/2048-New-era/` 作为资源 base，确保项目页路径下的 JS、CSS、favicon 都正确。
+3. 工作流会上传 `dist` 到 GitHub Pages artifact，并同步发布一份到 `gh-pages` 分支。
+4. 仓库 Settings → Pages 的 Source 首选 `GitHub Actions`；如果必须使用分支发布，请选择 `gh-pages / root`，不要选择 `main / root`。
 
-如果线上控制台再次出现 `/src/main.tsx` 404，优先检查 Pages Source 是否仍指向分支根目录，而不是 Actions。
+如果线上控制台再次出现 `/src/main.tsx` 404，说明 Pages 仍在发布源码版 `index.html`；优先检查 Pages Source 是否误选了 `main / root`。
 
 ## 产品范围
 

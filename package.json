@@ -1,11 +1,12 @@
 {
   "name": "2048-new-era",
   "private": true,
-  "version": "0.1.4",
+  "version": "0.1.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:pages": "tsc -b && vite build --base=/2048-New-era/",
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
