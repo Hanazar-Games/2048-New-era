@@ -20,14 +20,21 @@
 
 ## 当前公告
 
+### v0.1.6
+
+- 增加 `main / root` 误配兜底：源码版 `index.html` 如果被 GitHub Pages 直接发布，会在 `github.io` 上自动跳转到 `/2048-New-era/public/static/`。
+- 新增并提交 `public/static` 静态构建副本，避免当前 Pages Source 仍指向 `main / root` 时继续请求 `/src/main.tsx`。
+- 新增 `build:static` 脚本，可重复生成兜底静态副本；构建时禁用 public 目录复制，避免 `public/static/static` 递归产物。
+- 验证通过：`npm test -- --run`、`npm run lint`、`npm run build`、`npm run build:pages`、`npm run build:static`、`npm run format:check`。
+
+## 历史公告
+
 ### v0.1.5
 
 - 加固 GitHub Pages 部署：新增 `build:pages` 脚本，固定使用 `/2048-New-era/` base 构建线上资源。
 - Actions 现在同时上传 Pages artifact，并发布构建产物到 `gh-pages` 分支；如果仓库 Pages Source 不能使用 Actions，可切到 `gh-pages / root`。
 - 线上复查确认当前页面仍在返回源码版 `index.html`，说明 Pages Source 仍指向分支根目录；本版提供 `gh-pages` 分支兜底来避免继续发布源码入口。
 - 验证通过：`npm test -- --run`、`npm run lint`、`npm run build`、`npm run build:pages`、`npm run format:check`。
-
-## 历史公告
 
 ### v0.1.4
 
@@ -101,7 +108,7 @@
 3. 工作流会上传 `dist` 到 GitHub Pages artifact，并同步发布一份到 `gh-pages` 分支。
 4. 仓库 Settings → Pages 的 Source 首选 `GitHub Actions`；如果必须使用分支发布，请选择 `gh-pages / root`，不要选择 `main / root`。
 
-如果线上控制台再次出现 `/src/main.tsx` 404，说明 Pages 仍在发布源码版 `index.html`；优先检查 Pages Source 是否误选了 `main / root`。
+如果线上 Pages Source 仍误选 `main / root`，源码版 `index.html` 会自动跳转到已提交的 `/public/static/` 兜底构建副本。这个兜底只是为了线上不中断；长期仍建议把 Source 改成 `GitHub Actions` 或 `gh-pages / root`。
 
 ## 产品范围
 

@@ -5,6 +5,7 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   base: process.env.GITHUB_PAGES === 'true' ? '/2048-New-era/' : '/',
+  publicDir: process.env.STATIC_FALLBACK === 'true' ? false : 'public',
   plugins: [react()],
   resolve: {
     alias: {

@@ -7,7 +7,7 @@
     <meta name="description" content="2048 New Era — 经典 2048 游戏的现代重制版" />
     <script>
       ;(() => {
-        const baseUrl = '%BASE_URL%'
+        const baseUrl = '/2048-New-era/public/static/'
         const isUnbuiltSource = baseUrl.includes('BASE_URL')
         const isGitHubPages = window.location.hostname.endsWith('github.io')
         if (isUnbuiltSource && isGitHubPages) {
@@ -15,11 +15,12 @@
         }
       })()
     </script>
-    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/2048-New-era/public/static/favicon.svg" />
     <title>2048 New Era</title>
+    <script type="module" crossorigin src="/2048-New-era/public/static/assets/index-C79802we.js"></script>
+    <link rel="stylesheet" crossorigin href="/2048-New-era/public/static/assets/index-Z2I1ufQv.css">
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
