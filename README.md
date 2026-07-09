@@ -20,14 +20,21 @@
 
 ## 当前公告
 
+### v0.1.7
+
+- 修复兜底静态副本放在 `public/static` 时会被 Vite 复制进正常 `dist` 的问题，避免 Pages artifact 混入路径不正确的重复产物。
+- 将源码根目录误配兜底移动到仓库根目录 `fallback/`，源码版 `index.html` 现在会跳转到 `/2048-New-era/fallback/`。
+- 更新 `build:static` 脚本，静态兜底构建使用 `/2048-New-era/fallback/` base，并继续补齐 favicon 与 `.nojekyll`。
+- 验证通过：`npm test -- --run`、`npm run lint`、`npm run build`、`npm run build:pages`、`npm run build:static`、`npm run format:check`。
+
+## 历史公告
+
 ### v0.1.6
 
 - 增加 `main / root` 误配兜底：源码版 `index.html` 如果被 GitHub Pages 直接发布，会在 `github.io` 上自动跳转到 `/2048-New-era/public/static/`。
 - 新增并提交 `public/static` 静态构建副本，避免当前 Pages Source 仍指向 `main / root` 时继续请求 `/src/main.tsx`。
 - 新增 `build:static` 脚本，可重复生成兜底静态副本；构建时禁用 public 目录复制，避免 `public/static/static` 递归产物。
 - 验证通过：`npm test -- --run`、`npm run lint`、`npm run build`、`npm run build:pages`、`npm run build:static`、`npm run format:check`。
-
-## 历史公告
 
 ### v0.1.5
 
@@ -108,7 +115,7 @@
 3. 工作流会上传 `dist` 到 GitHub Pages artifact，并同步发布一份到 `gh-pages` 分支。
 4. 仓库 Settings → Pages 的 Source 首选 `GitHub Actions`；如果必须使用分支发布，请选择 `gh-pages / root`，不要选择 `main / root`。
 
-如果线上 Pages Source 仍误选 `main / root`，源码版 `index.html` 会自动跳转到已提交的 `/public/static/` 兜底构建副本。这个兜底只是为了线上不中断；长期仍建议把 Source 改成 `GitHub Actions` 或 `gh-pages / root`。
+如果线上 Pages Source 仍误选 `main / root`，源码版 `index.html` 会自动跳转到已提交的 `/fallback/` 兜底构建副本。这个兜底只是为了线上不中断；长期仍建议把 Source 改成 `GitHub Actions` 或 `gh-pages / root`。
 
 ## 产品范围
 

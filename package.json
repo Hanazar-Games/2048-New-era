@@ -1,13 +1,13 @@
 {
   "name": "2048-new-era",
   "private": true,
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "build:pages": "tsc -b && vite build --base=/2048-New-era/",
-    "build:static": "STATIC_FALLBACK=true vite build --base=/2048-New-era/public/static/ --outDir /tmp/2048-new-era-static --emptyOutDir && rm -rf public/static && mkdir -p public/static && cp -R /tmp/2048-new-era-static/. public/static && cp public/favicon.svg public/static/favicon.svg && touch public/static/.nojekyll",
+    "build:static": "STATIC_FALLBACK=true vite build --base=/2048-New-era/fallback/ --outDir /tmp/2048-new-era-static --emptyOutDir && rm -rf fallback && mkdir -p fallback && cp -R /tmp/2048-new-era-static/. fallback && cp public/favicon.svg fallback/favicon.svg && touch fallback/.nojekyll",
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",

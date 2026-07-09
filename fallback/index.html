@@ -7,18 +7,18 @@
     <meta name="description" content="2048 New Era — 经典 2048 游戏的现代重制版" />
     <script>
       ;(() => {
-        const baseUrl = '/2048-New-era/public/static/'
+        const baseUrl = '/2048-New-era/fallback/'
         const isUnbuiltSource = baseUrl.includes('BASE_URL')
         const isGitHubPages = window.location.hostname.endsWith('github.io')
         if (isUnbuiltSource && isGitHubPages) {
-          window.location.replace(new URL('public/static/', window.location.href))
+          window.location.replace(new URL('fallback/', window.location.href))
         }
       })()
     </script>
-    <link rel="icon" type="image/svg+xml" href="/2048-New-era/public/static/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/2048-New-era/fallback/favicon.svg" />
     <title>2048 New Era</title>
-    <script type="module" crossorigin src="/2048-New-era/public/static/assets/index-C79802we.js"></script>
-    <link rel="stylesheet" crossorigin href="/2048-New-era/public/static/assets/index-Z2I1ufQv.css">
+    <script type="module" crossorigin src="/2048-New-era/fallback/assets/index-C79802we.js"></script>
+    <link rel="stylesheet" crossorigin href="/2048-New-era/fallback/assets/index-Z2I1ufQv.css">
   </head>
   <body>
     <div id="root"></div>

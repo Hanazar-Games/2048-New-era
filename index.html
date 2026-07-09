@@ -11,7 +11,7 @@
         const isUnbuiltSource = baseUrl.includes('BASE_URL')
         const isGitHubPages = window.location.hostname.endsWith('github.io')
         if (isUnbuiltSource && isGitHubPages) {
-          window.location.replace(new URL('public/static/', window.location.href))
+          window.location.replace(new URL('fallback/', window.location.href))
         }
       })()
     </script>
